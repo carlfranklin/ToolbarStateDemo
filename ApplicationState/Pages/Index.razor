@@ -10,15 +10,17 @@
 
     void UpdateItemOne()
     {
-        var existingTabPage = AppState.TabPages[0];
-        var newTabPage = new TabPage() { Text = "Updated One", Value = "updated 1" };
-        AppState.UpdateTabPage(this, existingTabPage, newTabPage);
+        var pages = AppState.TabPages;
+        pages[0].Text = "Updated One";
+        pages[0].Value = "Updated 1";
+        AppState.UpdateTabPages(this, pages);
     }
 
     void UpdateItemTwo()
     {
-        var existingTabPage = AppState.TabPages[1];
-        var newTabPage = new TabPage() { Text = "Updated Two", Value = "updated 1" };
-        AppState.UpdateTabPage(this, existingTabPage, newTabPage);
+        var pages = AppState.TabPages;
+        pages[1].Text = "Updated Two";
+        pages[1].Value = "Updated 2";
+        AppState.UpdateTabPages(this, pages);
     }
 }

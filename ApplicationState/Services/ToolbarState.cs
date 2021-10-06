@@ -16,23 +16,11 @@ namespace ApplicationState.Services
         // All the toolbar items are locaed here.
         public List<TabPage> TabPages { get; set; } = new List<TabPage>();
 
-        // Call this from any page or component that wants to swap one TabPage for another
-        public void UpdateTabPage(ComponentBase Source, TabPage ExistingTabPage, TabPage NewTabPage)
+        // Call this from any page or component that wants to update the TabPage list
+        public void UpdateTabPages(ComponentBase Source, List<TabPage> TabPages)
         {
-            // We need the index in order to update it.
-            var found = (from x in TabPages
-                         where x.Text == ExistingTabPage.Text
-                         && x.Value == ExistingTabPage.Value
-                         select x).FirstOrDefault();
-            if (found != null)
-            {
-                // Get the index
-                var index = TabPages.IndexOf(found);
-                // Update the TabPage in the List
-                TabPages[index] = NewTabPage;
-                // Notify subscribers that this has changed
-                NotifyTabChanged(Source, ExistingTabPage, NewTabPage);
-            }
+            this.TabPages = TabPages;
+            NotifyTabsChanged(Source);
         }
 
         // This will be called from the toolbar when someone clicks on a button
@@ -46,9 +34,9 @@ namespace ApplicationState.Services
         private void NotifyTabClicked(ComponentBase Source, TabPage TabPage)
             => TabPageClicked?.Invoke(Source, TabPage);
 
-        public event Action<ComponentBase, TabPage, TabPage> TabPageUpdated;
-        private void NotifyTabChanged(ComponentBase Source, TabPage ExistingTabPage, TabPage NewTabPage) 
-            => TabPageUpdated?.Invoke(Source, ExistingTabPage, NewTabPage);
+        public event Action<ComponentBase> TabPagesUpdated;
+        private void NotifyTabsChanged(ComponentBase Source) 
+            => TabPagesUpdated?.Invoke(Source);
     
         
     }

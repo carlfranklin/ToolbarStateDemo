@@ -32,7 +32,7 @@
     /// <param name="ExistingTabPage"></param>
     /// <param name="NewTabPage"></param>
     /// <returns></returns>
-    private async Task AppState_TabPageUpdated(ComponentBase Source, TabPage ExistingTabPage, TabPage NewTabPage)
+    private async Task AppState_TabPagesUpdated(ComponentBase Source)
     {
         if (Source != this)
         {
@@ -48,16 +48,14 @@
         AppState.TabPages.Add(new TabPage { Text = "Three", Value = "3" });
 
         // Subscribe to updates
-        AppState.TabPageUpdated += async (Source, ExistingTabPage, NewTabPage)
-            => await AppState_TabPageUpdated(Source, ExistingTabPage, NewTabPage);
+        AppState.TabPagesUpdated += async (Source) => await AppState_TabPagesUpdated(Source);
 
     }
 
     void IDisposable.Dispose()
     {
         // Unsubscribe from updates
-        AppState.TabPageUpdated -= async (Source, ExistingTabPage, NewTabPage)
-            => await AppState_TabPageUpdated(Source, ExistingTabPage, NewTabPage);
+        AppState.TabPagesUpdated -= async (Source) => await AppState_TabPagesUpdated(Source);
     }
 
 }
