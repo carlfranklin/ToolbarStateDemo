@@ -1,0 +1,63 @@
+﻿@implements IDisposable
+@inject ToolbarState AppState
+
+<div style="height:42px;">
+    @foreach (var tabPage in AppState.TabPages)
+    {
+        <button class="btn btn-primary" @onclick="() => ButtonClicked(tabPage)">@tabPage.Text</button>
+    }
+</div>
+
+@code {
+
+    /// <summary>
+    /// The user clicked on a button in the toolbar
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    async Task ButtonClicked(TabPage page)
+    {
+        var text = page.Text;
+        var value = page.Value;
+
+        // put a breakpoint here to inspect the button that was pressed
+        AppState.SendTabClicked(this, page);
+        await Task.Delay(0);
+    }
+
+    /// <summary>
+    /// This happens when someone has updated a TabPage
+    /// </summary>
+    /// <param name="Source"></param>
+    /// <param name="ExistingTabPage"></param>
+    /// <param name="NewTabPage"></param>
+    /// <returns></returns>
+    private async Task AppState_TabPageUpdated(ComponentBase Source, TabPage ExistingTabPage, TabPage NewTabPage)
+    {
+        if (Source != this)
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        // Initialize the toolbar (TabControl if you will)
+        AppState.TabPages.Add(new TabPage { Text = "One", Value = "1" });
+        AppState.TabPages.Add(new TabPage { Text = "Two", Value = "2" });
+        AppState.TabPages.Add(new TabPage { Text = "Three", Value = "3" });
+
+        // Subscribe to updates
+        AppState.TabPageUpdated += async (Source, ExistingTabPage, NewTabPage)
+            => await AppState_TabPageUpdated(Source, ExistingTabPage, NewTabPage);
+
+    }
+
+    void IDisposable.Dispose()
+    {
+        // Unsubscribe from updates
+        AppState.TabPageUpdated -= async (Source, ExistingTabPage, NewTabPage)
+            => await AppState_TabPageUpdated(Source, ExistingTabPage, NewTabPage);
+    }
+
+}

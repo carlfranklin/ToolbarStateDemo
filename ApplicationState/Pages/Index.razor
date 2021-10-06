@@ -1,0 +1,24 @@
+﻿@inject ToolbarState AppState
+
+@page "/"
+
+<button class="btn btn-primary" @onclick="UpdateItemOne">Update Item One</button>
+
+<button class="btn btn-primary" @onclick="UpdateItemTwo">Update Item Two</button>
+
+@code {
+
+    void UpdateItemOne()
+    {
+        var existingTabPage = AppState.TabPages[0];
+        var newTabPage = new TabPage() { Text = "Updated One", Value = "updated 1" };
+        AppState.UpdateTabPage(this, existingTabPage, newTabPage);
+    }
+
+    void UpdateItemTwo()
+    {
+        var existingTabPage = AppState.TabPages[1];
+        var newTabPage = new TabPage() { Text = "Updated Two", Value = "updated 1" };
+        AppState.UpdateTabPage(this, existingTabPage, newTabPage);
+    }
+}
